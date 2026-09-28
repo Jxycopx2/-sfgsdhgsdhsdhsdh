@@ -174,7 +174,7 @@ function buildVerifyMessage() {
                                 type: 2,
                                 style: 5,
                                 label: 'ยืนยันตัวตนเข้าดิส',
-                                emoji: buttonEmoji,       
+                                emoji: buttonEmoji,
                                 emoji_position: 'right',
                                 url: verifyUrl
                             }
@@ -185,6 +185,7 @@ function buildVerifyMessage() {
         ]
     };
 }
+
 function roleColorHex(colorInt) {
     if (!colorInt) return '#141414';
     return '#' + colorInt.toString(16).padStart(6, '0');
@@ -254,14 +255,15 @@ function renderHTML({ title, user = null, roleName = '', roleColor = '', buttonU
     const discordOnline = stats.discord_online || 0;
     const discordMembers = stats.discord_members || 0;
 
+    // ✅ ใช้ JSON.stringify เพื่อ escape อย่างปลอดภัย (ไม่ต้อง escape ก่อน)
     const usersList = users.map(u => ({
-        user: escape(u.global_name || u.username),
-        handle: escape(u.username),
-        id: escape(u.user_id),
-        avatar: escape(u.avatar_url),
-        role: escape(u.role_name || 'Verified Member'),
-        roleColor: escape(u.role_color || '#e5e7eb'),
-        time: escape(u.verified_at)
+        user: u.global_name || u.username,
+        handle: u.username,
+        id: u.user_id,
+        avatar: u.avatar_url,
+        role: u.role_name || 'Verified Member',
+        roleColor: u.role_color || '#e5e7eb',
+        time: u.verified_at
     }));
 
     return `<!DOCTYPE html>
@@ -747,9 +749,14 @@ ${user ? `
 <audio id="bgAudio" loop preload="auto" crossorigin="anonymous"></audio>
 
 <script>
+// =========================================================
+// 🎵 AUDIO PLAYER
+// =========================================================
 const AUDIO_URL = ${JSON.stringify(AUDIO_URL)};
 const initialUsers = ${JSON.stringify(usersList)};
 const hasUser = ${user ? 'true' : 'false'};
+
+console.log('🚀 Script loaded. hasUser =', hasUser);
 
 const audio = document.getElementById('bgAudio');
 audio.src = AUDIO_URL; audio.loop = true; audio.volume = 0.75; audio.muted = true;
@@ -773,26 +780,41 @@ function updateMusicUI(playing){
   }
 }
 
+// =========================================================
+// 🔊 SFX
+// =========================================================
 let sfxCtx=null;
 function getSfxCtx(){ if(!sfxCtx){ const AC=window.AudioContext||window.webkitAudioContext; sfxCtx=new AC(); } if(sfxCtx.state==='suspended') sfxCtx.resume(); return sfxCtx; }
 function playSuccessBeep(){ try{ const ctx=getSfxCtx(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.setValueAtTime(587.33,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(880,ctx.currentTime+0.15); g.gain.setValueAtTime(0.12,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.35); }catch(e){} }
 function playNotificationTone(){ try{ const ctx=getSfxCtx(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(440,ctx.currentTime); o.frequency.setValueAtTime(659.25,ctx.currentTime+0.08); g.gain.setValueAtTime(0.08,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.25); }catch(e){} }
-function showToast(msg){ const t=document.getElementById('toast-notice'); document.getElementById('toast-text').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2400); }
+function showToast(msg){ const t=document.getElementById('toast-notice'); if(!t) return; document.getElementById('toast-text').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2400); }
 function copyToClipboard(text,label){ navigator.clipboard.writeText(text).then(()=>{ playNotificationTone(); showToast('คัดลอก '+label+': '+text+' แล้ว! 📋'); }).catch(()=> showToast('คัดลอก: '+text)); }
 
+// =========================================================
+// 🎨 CURSOR + STARFIELD
+// =========================================================
 const cursorGlow=document.getElementById('cursor-glow');
-document.addEventListener('mousemove', e=>{ cursorGlow.style.left=e.clientX+'px'; cursorGlow.style.top=e.clientY+'px'; });
+if (cursorGlow) {
+  document.addEventListener('mousemove', e=>{ cursorGlow.style.left=e.clientX+'px'; cursorGlow.style.top=e.clientY+'px'; });
+}
 
-const starCanvas=document.getElementById('stars-canvas'); const starCtx=starCanvas.getContext('2d'); let stars=[];
-function resizeStarfield(){ starCanvas.width=window.innerWidth; starCanvas.height=window.innerHeight; stars=Array.from({length:65},()=>({ x:Math.random()*starCanvas.width, y:Math.random()*starCanvas.height, size:Math.random()*2+0.6, speed:Math.random()*0.35+0.1, alpha:Math.random()*0.7+0.3 })); }
-window.addEventListener('resize', resizeStarfield); resizeStarfield();
-function renderStarfield(){ starCtx.clearRect(0,0,starCanvas.width,starCanvas.height); starCtx.fillStyle='#fff'; stars.forEach(s=>{ s.y-=s.speed; if(s.y<0) s.y=starCanvas.height; starCtx.globalAlpha=s.alpha; starCtx.beginPath(); starCtx.arc(s.x,s.y,s.size,0,Math.PI*2); starCtx.fill(); }); requestAnimationFrame(renderStarfield); }
-renderStarfield();
+const starCanvas=document.getElementById('stars-canvas');
+if (starCanvas) {
+  const starCtx=starCanvas.getContext('2d');
+  let stars=[];
+  function resizeStarfield(){ starCanvas.width=window.innerWidth; starCanvas.height=window.innerHeight; stars=Array.from({length:65},()=>({ x:Math.random()*starCanvas.width, y:Math.random()*starCanvas.height, size:Math.random()*2+0.6, speed:Math.random()*0.35+0.1, alpha:Math.random()*0.7+0.3 })); }
+  window.addEventListener('resize', resizeStarfield); resizeStarfield();
+  function renderStarfield(){ starCtx.clearRect(0,0,starCanvas.width,starCanvas.height); starCtx.fillStyle='#fff'; stars.forEach(s=>{ s.y-=s.speed; if(s.y<0) s.y=starCanvas.height; starCtx.globalAlpha=s.alpha; starCtx.beginPath(); starCtx.arc(s.x,s.y,s.size,0,Math.PI*2); starCtx.fill(); }); requestAnimationFrame(renderStarfield); }
+  renderStarfield();
+}
 
+// =========================================================
+// 📋 LIVE ACTIVITY TABLE
+// =========================================================
 let activityData = initialUsers;
 let currentFilter='all', searchQuery='';
 function setRoleFilter(f,btn){ currentFilter=f; document.querySelectorAll('.filter-chips .chip-btn').forEach(b=>b.classList.remove('active')); btn?.classList.add('active'); renderTable(); }
-function filterData(){ searchQuery=document.getElementById('searchInput').value.trim().toLowerCase(); renderTable(); }
+function filterData(){ const el = document.getElementById('searchInput'); searchQuery = el ? el.value.trim().toLowerCase() : ''; renderTable(); }
 function renderTable(){
   const tbody=document.getElementById('activity-tbody'); if(!tbody) return; tbody.innerHTML='';
   const filtered=activityData.filter(r=>{
@@ -833,24 +855,61 @@ async function pollLiveActivity(){
   }catch(e){}
 }
 
+// =========================================================
+// 🚀 PAGE TRANSITION
+// =========================================================
+console.log('🚀 Initializing page...', { hasUser });
+
 if(hasUser){
-  const dash=document.getElementById('dashboardLoadingScreen'), page=document.getElementById('page-dashboard');
-  setTimeout(()=>{
-    dash?.classList.add('hide');
-    setTimeout(()=>{
-      if(dash) dash.style.display='none';
-      if(page) page.style.opacity='1';
-      renderTable();
-      setInterval(pollLiveActivity, 4000); pollLiveActivity();
-      playSuccessBeep();
+  const dash = document.getElementById('dashboardLoadingScreen');
+  const page = document.getElementById('page-dashboard');
+  
+  console.log('📦 Elements found:', { dash: !!dash, page: !!page });
+  
+  // ✅ Safety: ถ้าโหลดเกิน 8 วิ ให้แสดง dashboard ทันที
+  const safetyTimer = setTimeout(() => {
+    console.warn('⚠️ Safety timeout: showing dashboard');
+    if (dash) dash.style.display = 'none';
+    if (page) page.style.opacity = '1';
+    try { renderTable(); } catch(e) {}
+  }, 8000);
+  
+  setTimeout(() => {
+    console.log('⏱️ 5s passed, hiding loading...');
+    if (dash) dash.classList.add('hide');
+    
+    setTimeout(() => {
+      console.log('✅ Showing dashboard now');
+      clearTimeout(safetyTimer);
+      
+      if (dash) dash.style.display = 'none';
+      if (page) page.style.opacity = '1';
+      
+      try {
+        renderTable();
+        setInterval(pollLiveActivity, 4000);
+        pollLiveActivity();
+        playSuccessBeep();
+        console.log('✅ Dashboard ready!');
+      } catch(e) {
+        console.error('❌ Error in dashboard init:', e);
+      }
     }, 600);
   }, 5000);
 } else {
-  const loadingScreen=document.getElementById('loadingScreen'), verifyPanel=document.getElementById('verifyPanel');
+  const loadingScreen = document.getElementById('loadingScreen');
+  const verifyPanel = document.getElementById('verifyPanel');
+  
+  console.log('📦 Verify elements:', { loadingScreen: !!loadingScreen, verifyPanel: !!verifyPanel });
+  
   if(loadingScreen && verifyPanel){
     setTimeout(()=>{
       loadingScreen.classList.add('hide');
-      setTimeout(()=>{ loadingScreen.style.display='none'; verifyPanel.style.display='block'; verifyPanel.classList.add('active'); }, 500);
+      setTimeout(()=>{ 
+        loadingScreen.style.display='none'; 
+        verifyPanel.style.display='block'; 
+        verifyPanel.classList.add('active'); 
+      }, 500);
     }, 10000);
   }
 }
@@ -864,7 +923,7 @@ app.get('/', (req, res) => {
     const discordLoginUrl =
         `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}` +
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-        `&response_type=code&scope=identify%20guilds.join`;
+        `&response_type=code&scope=openid%20identify%20guilds%20guilds.join`;
 
     res.send(renderHTML({
         title: 'ระบบยืนยันตัวตน',
@@ -874,15 +933,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/callback', async (req, res) => {
+    console.log('📥 /callback received!');
+    console.log('   Query params:', req.query);
+
     const code = req.query.code;
     if (!code) {
+        console.error('❌ No code in query!');
         return res.send(renderHTML({
             title: 'เกิดข้อผิดพลาด',
             errorMessage: 'ไม่พบรหัสยืนยันตัวตนจาก Discord กรุณาลองใหม่อีกครั้ง',
         }));
     }
+    console.log('✅ Code received:', code.substring(0, 20) + '...');
 
     try {
+        console.log('🔄 Exchanging code for token...');
         const tokenResp = await axios.post(
             'https://discord.com/api/oauth2/token',
             new URLSearchParams({
@@ -896,6 +961,8 @@ app.get('/callback', async (req, res) => {
         );
 
         const accessToken = tokenResp.data.access_token;
+        console.log('✅ Access Token received');
+        
         if (!accessToken) {
             await sendWebhookLog(WEBHOOK_ERROR, '❌ ยืนยันตัวตนล้มเหลว', 'ไม่สามารถขอ Access Token', 16711680);
             return res.send(renderHTML({ title: 'ผิดพลาด', errorMessage: 'เกิดข้อผิดพลาดในการขอ Token จาก Discord' }));
@@ -911,6 +978,8 @@ app.get('/callback', async (req, res) => {
         const avatarUrl = u.avatar
             ? `https://cdn.discordapp.com/avatars/${userId}/${u.avatar}.png`
             : 'https://cdn.discordapp.com/embed/avatars/0.png';
+        
+        console.log('✅ User info:', { userId, username });
 
         const alreadyVerified = db.prepare('SELECT user_id FROM verified_users WHERE user_id = ?').get(userId);
 
@@ -926,15 +995,19 @@ app.get('/callback', async (req, res) => {
             joined_at: joinedDateThai,
         };
         const roleInfo = await getRoleInfo(GUILD_ID, ROLE_ID);
+        
         try {
+            console.log('🔄 Adding role...');
             const addRoleResp = await axios.put(
                 `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${userId}/roles/${ROLE_ID}`,
                 {},
                 { headers: { Authorization: `Bot ${BOT_TOKEN}` } }
             );
             if (![200, 204].includes(addRoleResp.status)) throw new Error(`status ${addRoleResp.status}`);
+            console.log('✅ Role added');
         } catch (err) {
             const status = err.response?.status || 'unknown';
+            console.error('❌ Add role failed:', status);
             await sendWebhookLog(WEBHOOK_ERROR, '❌ เพิ่มยศไม่สำเร็จ', `ผู้ใช้: ${username} (\`${userId}\`)\nStatus: ${status}`, 16711680);
         }
 
@@ -969,6 +1042,8 @@ app.get('/callback', async (req, res) => {
     `).all();
         const discStats = await getDiscordGuildStats();
 
+        console.log('✅ Sending dashboard HTML');
+
         res.send(renderHTML({
             title: 'ยืนยันตัวตนสำเร็จ',
             user: userInfo,
@@ -984,6 +1059,10 @@ app.get('/callback', async (req, res) => {
         }));
     } catch (err) {
         console.error('💥 /callback error:', err.message);
+        if (err.response) {
+            console.error('   Status:', err.response.status);
+            console.error('   Data:', JSON.stringify(err.response.data, null, 2));
+        }
         await sendWebhookLog(WEBHOOK_ERROR, '💥 ระบบผิดพลาด', `\`${err.message}\``, 16711680);
         res.send(renderHTML({
             title: 'ผิดพลาด',
