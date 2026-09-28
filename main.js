@@ -176,7 +176,7 @@ async function sendWebhookLog(webhookUrl, title, description, color, avatarUrl =
         const embed = {
             title, description, color,
             timestamp: new Date().toISOString(),
-            footer: { text: 'Verification Gateway • ระบบยืนยันตัวตน' }
+            footer: { text: '• ระบบยืนยันตัวตน' }
         };
         if (avatarUrl) embed.thumbnail = { url: avatarUrl };
         const resp = await axios.post(webhookUrl, { embeds: [embed] }, { timeout: 10000 });
@@ -787,12 +787,10 @@ function playNotificationTone(){ try{ const ctx=getSfxCtx(); const o=ctx.createO
 function showToast(msg){ const t=document.getElementById('toast-notice'); if(!t) return; document.getElementById('toast-text').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2400); }
 function copyToClipboard(text,label){ navigator.clipboard.writeText(text).then(()=>{ playNotificationTone(); showToast('คัดลอก '+label+': '+text+' แล้ว! 📋'); }).catch(()=> showToast('คัดลอก: '+text)); }
 
-// expose globals
 window.toggleMusic = toggleMusic;
 window.copyToClipboard = copyToClipboard;
 window.playSuccessBeep = playSuccessBeep;
 
-// ผูกปุ่ม Copy ID หลัก (ของผู้ใช้ที่ login)
 (function bindMainCopyId() {
   const el = document.querySelector('.btn-copy-id[data-uid]');
   if (el) el.addEventListener('click', function() { copyToClipboard(this.dataset.uid, 'Discord ID'); });
@@ -897,12 +895,10 @@ function renderTable() {
   if (badge) badge.textContent = activityData.length + ' รายการล่าสุด';
 }
 
-// expose globals
 window.setRoleFilter = setRoleFilter;
 window.filterData = filterData;
 window.renderTable = renderTable;
 
-// ผูกปุ่ม filter + search
 (function bindToolbar() {
   document.querySelectorAll('.filter-chips .chip-btn').forEach(function(btn) {
     btn.addEventListener('click', function() { setRoleFilter(this.dataset.filter, this); });
@@ -1122,9 +1118,6 @@ app.get('/api/live_activity', async (req, res) => {
     }
 });
 
-// =========================================================
-// 🤖 BOT EVENTS
-// =========================================================
 client.once(Events.ClientReady, async (c) => {
     console.log(`✅ Bot online: ${c.user.tag}`);
     c.user.setPresence({
