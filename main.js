@@ -18,7 +18,7 @@ const {
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI || 'https://nongflexv1.up.railway.app/callback';
+const REDIRECT_URI = process.env.REDIRECT_URI || 'https://nongflexv2.up.railway.app/callback';
 const GUILD_ID = process.env.GUILD_ID || '1554125892329017366';
 const ROLE_ID = process.env.ROLE_ID || '1554203720965689408';
 const PORT = process.env.PORT || 5000;
@@ -112,7 +112,7 @@ function buildVerifyMessage() {
         `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}` +
         `&response_type=code` +
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-        `&scope=identify%20guilds.join`;
+        `&scope=openid%20identify%20guilds%20guilds.join`;
     const bigImageUrl = 'https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif';
 
     return {
@@ -160,7 +160,7 @@ function buildVerifyMessage() {
                                 type: 2,
                                 style: 5,
                                 label: 'ยืนยันตัวตนเข้าดิส',
-                                emoji: { name: '✅' },
+                                emoji: { name: '<a:botsever62:1184927865830117566>' },
                                 url: verifyUrl
                             }
                         ]
