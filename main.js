@@ -116,20 +116,20 @@ function buildVerifyMessage() {
         components: [
             {
                 type: 17,
-                accent_color: 0x6366f1,
+                accent_color: 0x000000,
                 components: [
                     {
                         type: 9,
-                        components: [{ type: 10, content: '# ⚙️ VERIFICATION SYSTEM\n**ระบบรับยศอัตโนมัติ 24 ชั่วโมง**' }],
+                        components: [{ type: 10, content: '# \`⚙️\` **VERIFICATION SYSTEM**\n- **ระบบรับยศอัตโนมัติ 24 ชั่วโมง**' }],
                         accessory: { type: 11, media: { url: 'https://i.pinimg.com/1200x/a4/78/cf/a478cf80cbdcc1f9a7bdc7f9f32d72c6.jpg' } }
                     },
                     { type: 14, divider: true, spacing: 1 },
                     {
                         type: 10,
                         content:
-                            `> **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n` +
-                            `> 📥 **รับยศ** <@&${ROLE_ID}> **ทันที**\n` +
-                            '> 🔒 **ระบบปลอดภัย ทำงาน 24 ชม.**'
+                            `- **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n\n` +
+                            `-  \`🔔\` **รับยศ** <@&${ROLE_ID}> **ทันที**\n\n` +
+                            '- \`⚠️\` **ระบบปลอดภัย ทำงาน 24 ชม.**'
                     },
                     { type: 12, items: [{ media: { url: bigImageUrl }, description: 'Verification Banner' }] },
                     { type: 14, divider: false, spacing: 2 },
@@ -454,9 +454,9 @@ td:last-child{border-top-right-radius:16px;border-bottom-right-radius:16px}
 
 <div class="app-layout">
 ${isUser ? renderDashboard({
-    user, roleNameSafe, roleColorSafe, usersJson,
-    discordOnline, discordMembers, totalCount, todayCount
-}) : renderVerify({ errorSafe, buttonUrl })}
+        user, roleNameSafe, roleColorSafe, usersJson,
+        discordOnline, discordMembers, totalCount, todayCount
+    }) : renderVerify({ errorSafe, buttonUrl })}
 </div>
 
 <div class="floating-music-player">
@@ -494,9 +494,6 @@ window.__AUDIO_URL__ = ${JSON.stringify(AUDIO_URL)};
 </html>`;
 }
 
-// =========================================================
-// 🎨 SUB-RENDERERS
-// =========================================================
 function renderDashboard({ user, roleNameSafe, roleColorSafe, usersJson, discordOnline, discordMembers, totalCount, todayCount }) {
     const escape = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -541,8 +538,8 @@ function renderDashboard({ user, roleNameSafe, roleColorSafe, usersJson, discord
         </svg>
       </div>
       <div>
-        <div class="brand-title">ระบบยืนยันตัวตน by.น้องเจคอปเด็กชายบริสุทธิ์</div>
-        <div class="brand-sub">v1.0 · DASHBOARD</div>
+        <div class="brand-title">ระบบยืนยันตัวตน</div>
+        <div class="brand-sub">v1.0</div>
       </div>
     </div>
   </div>
@@ -637,7 +634,7 @@ function renderDashboard({ user, roleNameSafe, roleColorSafe, usersJson, discord
     <div class="activity-header">
       <div class="title-group">
         <div class="eyebrow"><span class="live-dot"></span><span>LIVE STREAM</span></div>
-        <h1 class="main-title">ฟีดสดคนรับยศล่าสุด</h1>
+        <h1 class="main-title"></h1>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div class="badge-pill"><span class="live-dot"></span><span>อัปเดตแบบเรียลไทม์</span></div>
@@ -651,8 +648,6 @@ function renderDashboard({ user, roleNameSafe, roleColorSafe, usersJson, discord
       </div>
       <div class="filter-chips">
         <button class="chip-btn active" data-filter="all">ทั้งหมด</button>
-        <button class="chip-btn" data-filter="vip">👑 VIP</button>
-        <button class="chip-btn" data-filter="verified">⚡ Verified</button>
       </div>
     </div>
     <div class="table-wrapper">
@@ -1166,7 +1161,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.reply({ content: '✅ ส่งข้อความ Components V2 สำเร็จ!', ephemeral: true });
     } catch (err) {
         console.error('[setup] Error:', err);
-        await interaction.reply({ content: `❌ ไม่สำเร็จ: ${err.message}`, ephemeral: true }).catch(() => {});
+        await interaction.reply({ content: `❌ ไม่สำเร็จ: ${err.message}`, ephemeral: true }).catch(() => { });
     }
 });
 
