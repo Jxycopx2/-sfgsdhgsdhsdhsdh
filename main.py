@@ -22,10 +22,10 @@ REDIRECT_URI = os.environ.get("REDIRECT_URI", "https://nongflexv1.up.railway.app
 GUILD_ID = 1554125892329017366
 ROLE_ID = 1554203720965689408
 
-WEBHOOK_SUCCESS = "https://discord.com/api/webhooks/1540031111223189701/KhD_TF8YMxmRih4KQCH-MtBnTy74Qcodk7trYCqjy7_z6-6zQ8frXd8dJX-FOaZ1MO7X"
-WEBHOOK_ERROR = "https://discord.com/api/webhooks/1540065078278365204/8MNh3CWoP4GUM_8k2WLw53H5EumtDUY7p-uMTQ1kvCD30zxFS7VadBlMfRchuBjoVsX3"
+WEBHOOK_SUCCESS = "https://canary.discord.com/api/webhooks/1554209848982376568/P1C1eXW37m9rez3KwSm7WSlZJO3dXhW5-TdVBCpR4BZbKrGwFuMnMcWHLjaNxDJ7X91k"
+WEBHOOK_ERROR = "https://canary.discord.com/api/webhooks/1554209851997954130/Yb-juLPFnC3HmVftMZ0klEB9OJdKzlWZ2ZdkN4sDyVw6S_ZYK--bSwm2jo_qi6uyG6mZ"
 
-BRAND_LOGO_URL = "https://media.discordapp.net/attachments/1554137226294857728/1554202597051601098/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc0776&is=6abab5f6&hm=2d442ec35bb67d1ec5fcbfa5e4ea9f616402af836df35e0282546963a2983e1f&=&format=webp"
+BRAND_LOGO_URL = "https://i.postimg.cc/QdcnLSJd/e380ca8bc4596b18d991b97d9e48c123.jpg"
 
 AUDIO_URL = "https://files.catbox.moe/fyvd9o.mp3"
 BACKGROUND_IMAGE = "https://files.catbox.moe/3jmrta.jpg"
@@ -39,7 +39,6 @@ LOG_BUFFER_MAXLEN = 300
 log_buffer = deque(maxlen=LOG_BUFFER_MAXLEN)
 
 class MemoryLogHandler(logging.Handler):
-    """เก็บ log ล่าสุดไว้ใน memory เพื่อโชว์แบบ live ในหน้า admin dashboard"""
     def emit(self, record):
         try:
             log_buffer.append({
