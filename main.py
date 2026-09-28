@@ -2697,7 +2697,7 @@ async def setup(interaction: discord.Interaction):
         color=discord.Color(0x000000)
     )
     embed.set_footer(text="VERIFICATION SYSTEM • by.น้องเจอคอปเด็กชายบริสุทธิ์")
-    embed.set_image(url="https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp")
+    embed.set_image(url="https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif")
     await interaction.response.send_message("✅ สร้างปุ่มยืนยันตัวตนสำเร็จ!", ephemeral=True)
     await interaction.channel.send(embed=embed, view=VerifyView())
 
