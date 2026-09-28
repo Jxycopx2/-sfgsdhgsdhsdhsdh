@@ -240,7 +240,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       width: 100%;
       opacity: 0;
       transform: translateY(16px);
-      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .page-view.active {
@@ -693,11 +693,36 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       animation: progressFill 10s cubic-bezier(0.3, 0, 0.7, 1) forwards;
     }
 
+    .loading-progress-bar.dashboard {
+      animation: progressFill 5s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+    }
+
     @keyframes progressFill {
       0% { width: 0%; }
       50% { width: 65%; }
       85% { width: 90%; }
       100% { width: 100%; }
+    }
+
+    /* OVERLAY: Dashboard loading */
+    .dashboard-loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(4, 6, 15, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dashboard-loading-overlay.hide {
+      opacity: 0;
+      transform: scale(0.94);
+      pointer-events: none;
     }
 
     .btn-godtier {
@@ -1457,6 +1482,32 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     {% if user %}
     <!-- ============================================= -->
+    <!-- OVERLAY LOADING: ยืนยันตัวตนสำเร็จ (5 วิ) -->
+    <!-- ============================================= -->
+    <div class="dashboard-loading-overlay" id="dashboardLoadingScreen">
+      <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <div class="loading-ring">
+          <div class="loading-ring-inner">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+        </div>
+        <div class="loading-text">
+          กำลังยืนยันตัวตน
+          <span class="loading-dots">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+        <div class="loading-subtext">VERIFYING CREDENTIALS</div>
+        <div class="loading-progress">
+          <div class="loading-progress-bar dashboard"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================= -->
     <!-- PAGE 2 : DASHBOARD -->
     <!-- ============================================= -->
     <div class="page-view active" id="page-dashboard">
@@ -2039,9 +2090,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const fxCtx = fxCanvas ? fxCanvas.getContext('2d') : null;
     let particles = [];
     function fireCelebration() {
-      if (!fxCanvas || !card) return;
-      fxCanvas.width = card.offsetWidth;
-      fxCanvas.height = card.offsetHeight;
+      if (!fxCanvas) return;
+      const targetCard = document.getElementById('hologramCard');
+      if (!targetCard) return;
+      fxCanvas.width = targetCard.offsetWidth;
+      fxCanvas.height = targetCard.offsetHeight;
       particles = [];
       const colors = ['#e5e7eb', '#9ca3af', '#f3f4f6', '#d1d5db', '#ffffff', '#6b7280'];
       for (let i = 0; i < 65; i++) {
@@ -2184,15 +2237,39 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       } catch (e) {}
     }
 
+    // =========================================================
+    // DASHBOARD: โชว์ loading 5 วิ ก่อนแสดงหน้าสำเร็จ
+    // =========================================================
     {% if user %}
-    setInterval(pollLiveActivity, 4000);
-    pollLiveActivity();
-    renderTable();
-    setTimeout(() => { fireCelebration(); renderFX(); }, 300);
+    (function initDashboardFlow() {
+      const dashLoading = document.getElementById('dashboardLoadingScreen');
+      const pageDashboard = document.getElementById('page-dashboard');
+
+      // ซ่อน dashboard content ไว้ก่อน
+      if (pageDashboard) pageDashboard.style.opacity = '0';
+
+      // หลัง 5 วิ → fade out loading + แสดง dashboard
+      setTimeout(() => {
+        if (dashLoading) dashLoading.classList.add('hide');
+
+        setTimeout(() => {
+          if (dashLoading) dashLoading.style.display = 'none';
+          if (pageDashboard) pageDashboard.style.opacity = '1';
+
+          // เริ่มทำงานทุกอย่าง
+          setInterval(pollLiveActivity, 4000);
+          pollLiveActivity();
+          renderTable();
+          fireCelebration();
+          renderFX();
+          playSuccessBeep();
+        }, 600);
+      }, 5000);
+    })();
     {% endif %}
 
     // =========================================================
-    // LOADING → VERIFY TRANSITION (10 วินาที)
+    // LOADING → VERIFY TRANSITION (หน้าแรก 10 วินาที)
     // =========================================================
     {% if not user and not error_message %}
     (function initLoadingFlow() {
@@ -2620,7 +2697,7 @@ async def setup(interaction: discord.Interaction):
         color=discord.Color(0x6366f1)
     )
     embed.set_footer(
-        text="VERIFICATION SYSTEM • by.น้องเจคอปเด็กชายบริสุทธิ์",
+        text="VERIFICATION SYSTEM • by.น้องเจอคอปเด็กชายบริสุทธิ์",
         icon_url='https://media.tenor.com/bhC8X-tsTK4AAAAi/tspchan1-lick.gif'
     )
     embed.set_image(url="https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp")
