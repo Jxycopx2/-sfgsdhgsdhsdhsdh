@@ -19,13 +19,13 @@ CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 REDIRECT_URI = os.environ.get("REDIRECT_URI", "https://nongflexv1.up.railway.app/callback")
 
-GUILD_ID = 1554125892329017366
-ROLE_ID = 1554203720965689408
+GUILD_ID = 1207514483527000084
+ROLE_ID = 1211224793060478976
 
-WEBHOOK_SUCCESS = "https://canary.discord.com/api/webhooks/1554209848982376568/P1C1eXW37m9rez3KwSm7WSlZJO3dXhW5-TdVBCpR4BZbKrGwFuMnMcWHLjaNxDJ7X91k"
-WEBHOOK_ERROR = "https://canary.discord.com/api/webhooks/1554209851997954130/Yb-juLPFnC3HmVftMZ0klEB9OJdKzlWZ2ZdkN4sDyVw6S_ZYK--bSwm2jo_qi6uyG6mZ"
+WEBHOOK_SUCCESS = "https://discord.com/api/webhooks/1540031111223189701/KhD_TF8YMxmRih4KQCH-MtBnTy74Qcodk7trYCqjy7_z6-6zQ8frXd8dJX-FOaZ1MO7X"
+WEBHOOK_ERROR = "https://discord.com/api/webhooks/1540065078278365204/8MNh3CWoP4GUM_8k2WLw53H5EumtDUY7p-uMTQ1kvCD30zxFS7VadBlMfRchuBjoVsX3"
 
-BRAND_LOGO_URL = "https://media.discordapp.net/attachments/1540031041513979924/1554211522429984808/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc0fc6&is=6ababe46&hm=b4622fea66ab1e150b206ab27c67a96480841808ffeb44ceb0130c031d6f8d5a&=&format=webp"
+BRAND_LOGO_URL = "https://media.discordapp.net/attachments/1554137226294857728/1554202597051601098/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc0776&is=6abab5f6&hm=2d442ec35bb67d1ec5fcbfa5e4ea9f616402af836df35e0282546963a2983e1f&=&format=webp"
 
 AUDIO_URL = "https://files.catbox.moe/fyvd9o.mp3"
 BACKGROUND_IMAGE = "https://files.catbox.moe/3jmrta.jpg"
@@ -39,6 +39,7 @@ LOG_BUFFER_MAXLEN = 300
 log_buffer = deque(maxlen=LOG_BUFFER_MAXLEN)
 
 class MemoryLogHandler(logging.Handler):
+    """เก็บ log ล่าสุดไว้ใน memory เพื่อโชว์แบบ live ในหน้า admin dashboard"""
     def emit(self, record):
         try:
             log_buffer.append({
@@ -689,12 +690,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background: linear-gradient(90deg, #9ca3af, #ffffff, #e5e7eb);
       border-radius: 100px;
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-      animation: progressFill 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation: progressFill 10s cubic-bezier(0.3, 0, 0.7, 1) forwards;
     }
 
     @keyframes progressFill {
       0% { width: 0%; }
       50% { width: 65%; }
+      85% { width: 90%; }
       100% { width: 100%; }
     }
 
@@ -1735,7 +1737,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
               </a>
             </div>
             {% else %}
-            <!-- PHASE 1: LOADING -->
+            <!-- PHASE 1: LOADING (10 วินาที) -->
             <div class="loading-screen" id="loadingScreen">
               <div class="loading-ring">
                 <div class="loading-ring-inner">
@@ -2190,7 +2192,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     {% endif %}
 
     // =========================================================
-    // LOADING → VERIFY TRANSITION (หน้าแรกเท่านั้น)
+    // LOADING → VERIFY TRANSITION (10 วินาที)
     // =========================================================
     {% if not user and not error_message %}
     (function initLoadingFlow() {
@@ -2199,7 +2201,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
       if (!loadingScreen || !verifyPanel) return;
 
-      // หลัง 2.5 วิ → ซ่อน loading, โชว์ verify
+      // หลัง 10 วิ → ซ่อน loading, โชว์ verify
       setTimeout(() => {
         loadingScreen.classList.add('hide');
 
@@ -2223,7 +2225,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             osc.start(); osc.stop(ctx.currentTime + 0.3);
           } catch (e) {}
         }, 500);
-      }, 2500);
+      }, 10000);
     })();
     {% endif %}
   </script>
