@@ -113,6 +113,7 @@ function buildVerifyMessage() {
         `&response_type=code` +
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
         `&scope=openid%20identify%20guilds%20guilds.join`;
+
     const bigImageUrl = 'https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif';
 
     return {
@@ -144,7 +145,7 @@ function buildVerifyMessage() {
                             '> 🔒 **ระบบปลอดภัย ทำงาน 24 ชม.**'
                     },
                     {
-                        type: 12,
+                        type: 12, 
                         items: [
                             {
                                 media: { url: bigImageUrl },
@@ -161,6 +162,7 @@ function buildVerifyMessage() {
                                 style: 5,
                                 label: 'ยืนยันตัวตนเข้าดิส',
                                 emoji: { name: '<a:botsever62:1184927865830117566>' },
+                                emoji_position: 'right',
                                 url: verifyUrl
                             }
                         ]
