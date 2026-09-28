@@ -25,7 +25,7 @@ ROLE_ID = 1554203720965689408
 WEBHOOK_SUCCESS = "https://canary.discord.com/api/webhooks/1554209848982376568/P1C1eXW37m9rez3KwSm7WSlZJO3dXhW5-TdVBCpR4BZbKrGwFuMnMcWHLjaNxDJ7X91k"
 WEBHOOK_ERROR = "https://canary.discord.com/api/webhooks/1554209851997954130/Yb-juLPFnC3HmVftMZ0klEB9OJdKzlWZ2ZdkN4sDyVw6S_ZYK--bSwm2jo_qi6uyG6mZ"
 
-BRAND_LOGO_URL = "https://i.postimg.cc/QdcnLSJd/e380ca8bc4596b18d991b97d9e48c123.jpg"
+BRAND_LOGO_URL = "https://media.discordapp.net/attachments/1540031041513979924/1554211522429984808/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc0fc6&is=6ababe46&hm=b4622fea66ab1e150b206ab27c67a96480841808ffeb44ceb0130c031d6f8d5a&=&format=webp"
 
 AUDIO_URL = "https://files.catbox.moe/fyvd9o.mp3"
 BACKGROUND_IMAGE = "https://files.catbox.moe/3jmrta.jpg"
