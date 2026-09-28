@@ -79,7 +79,6 @@ if (!cols.includes('role_color')) db.exec(`ALTER TABLE verified_users ADD COLUMN
 
 console.log('✅ SQLite ready: verifications.db');
 
-
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -91,6 +90,14 @@ app.use(session({
 }));
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+    });
+});
 
 const client = new Client({
     intents: [
@@ -106,12 +113,13 @@ function buildVerifyMessage() {
         `&response_type=code` +
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
         `&scope=identify%20guilds.join`;
+    const bigImageUrl = 'https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif';
 
     return {
         flags: 32768, 
         components: [
             {
-                type: 17,
+                type: 17, 
                 accent_color: 0x6366f1,
                 components: [
                     {
@@ -119,7 +127,7 @@ function buildVerifyMessage() {
                         components: [
                             {
                                 type: 10,
-                                content: '# `⚙️` VERIFICATION SYSTEM\n**ระบบรับยศอัตโนมัติ 24 ชั่วโมง**'
+                                content: '# ⚙️ VERIFICATION SYSTEM\n**ระบบรับยศอัตโนมัติ 24 ชั่วโมง**'
                             }
                         ],
                         accessory: {
@@ -131,9 +139,18 @@ function buildVerifyMessage() {
                     {
                         type: 10,
                         content:
-                            '> `🤖` **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n' +
-                            `> \`📥\` **รับยศ** <@&${ROLE_ID}> **ทันที**\n` +
-                            '> `🔒` **ระบบปลอดภัย ทำงาน 24 ชม.**'
+                            '> 🤖 **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n' +
+                            `> 📥 **รับยศ** <@&${ROLE_ID}> **ทันที**\n` +
+                            '> 🔒 **ระบบปลอดภัย ทำงาน 24 ชม.**'
+                    },
+                    {
+                        type: 12,
+                        items: [
+                            {
+                                media: { url: bigImageUrl },
+                                description: 'Verification Banner'
+                            }
+                        ]
                     },
                     { type: 14, divider: false, spacing: 2 },
                     {
@@ -157,7 +174,6 @@ function buildVerifyMessage() {
         ]
     };
 }
-
 function roleColorHex(colorInt) {
     if (!colorInt) return '#141414';
     return '#' + colorInt.toString(16).padStart(6, '0');
@@ -1028,8 +1044,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 (async () => {
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🌐 Web running on 0.0.0.0:${PORT}`);
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log(`🌐 Web running on http://0.0.0.0:${PORT}`);
+        console.log(`📡 PORT from env: ${process.env.PORT || '(not set, using 5000)'}`);
+    });
+
+    server.on('error', (err) => {
+        console.error('❌ Express server error:', err.message);
+        process.exit(1);
     });
 
     client.login(BOT_TOKEN).catch(err => {
