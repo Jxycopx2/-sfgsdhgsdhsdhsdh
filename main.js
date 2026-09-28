@@ -108,6 +108,19 @@ const client = new Client({
 });
 
 function buildVerifyMessage() {
+    const setEmoji = '<a:botsever62:1184927865830117566>';
+    const parseEmoji = (str) => {
+        const match = str.match(/^<(a?):(\w+):(\d+)>$/);
+        if (!match) return null;
+        return {
+            name: match[2],
+            id: match[3],
+            animated: match[1] === 'a'
+        };
+    };
+
+    const buttonEmoji = parseEmoji(setEmoji);
+
     const verifyUrl =
         `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}` +
         `&response_type=code` +
@@ -117,10 +130,10 @@ function buildVerifyMessage() {
     const bigImageUrl = 'https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif';
 
     return {
-        flags: 32768, 
+        flags: 32768,
         components: [
             {
-                type: 17, 
+                type: 17,
                 accent_color: 0x6366f1,
                 components: [
                     {
@@ -140,12 +153,12 @@ function buildVerifyMessage() {
                     {
                         type: 10,
                         content:
-                            '> 🤖 **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n' +
+                            `> ${setEmoji} **กดปุ่มด้านล่างเพื่อยืนยันตัวตน**\n` +
                             `> 📥 **รับยศ** <@&${ROLE_ID}> **ทันที**\n` +
                             '> 🔒 **ระบบปลอดภัย ทำงาน 24 ชม.**'
                     },
                     {
-                        type: 12, 
+                        type: 12,
                         items: [
                             {
                                 media: { url: bigImageUrl },
@@ -161,7 +174,7 @@ function buildVerifyMessage() {
                                 type: 2,
                                 style: 5,
                                 label: 'ยืนยันตัวตนเข้าดิส',
-                                emoji: { name: '<a:botsever62:1184927865830117566>' },
+                                emoji: buttonEmoji,       
                                 emoji_position: 'right',
                                 url: verifyUrl
                             }
