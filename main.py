@@ -2692,16 +2692,15 @@ async def on_ready():
 async def setup(interaction: discord.Interaction):
     embed = discord.Embed(
         title="`⚙️` **VERIFICATION SYSTEM**",
-        description=f"- `🤖` **ระบบรับยศอัตโนมัติ 24 ชั่วโมง**\n\n"
-                    f"- `📥` **กดปุ่มด้านล่างเพื่อยืนยันตัวตนและรับยศ** **<@&{ROLE_ID}>** **ทันที**",
-        color=discord.Color(0x6366f1)
+        description=f"-  **ระบบรับยศอัตโนมัติ24ชั่วโมง**\n\n"
+                    f"-  **ยศที่จะได้รับ** **<@&{ROLE_ID}>**",
+        color=discord.Color(0x0000000)
     )
     embed.set_footer(
         text="VERIFICATION SYSTEM • by.น้องเจอคอปเด็กชายบริสุทธิ์",
-        icon_url='https://media.tenor.com/bhC8X-tsTK4AAAAi/tspchan1-lick.gif'
+        icon_url='https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp'
     )
     embed.set_image(url="https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp")
-    embed.set_thumbnail(url='https://i.pinimg.com/1200x/a4/78/cf/a478cf80cbdcc1f9a7bdc7f9f32d72c6.jpg')
     await interaction.response.send_message("✅ สร้างปุ่มยืนยันตัวตนสำเร็จ!", ephemeral=True)
     await interaction.channel.send(embed=embed, view=VerifyView())
 
