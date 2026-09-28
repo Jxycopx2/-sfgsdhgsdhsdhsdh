@@ -17,10 +17,10 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-REDIRECT_URI = os.environ.get("REDIRECT_URI", "https://stifshopv2.up.railway.app/callback")
+REDIRECT_URI = os.environ.get("REDIRECT_URI", "https://nongflexv1.up.railway.app/callback")
 
-GUILD_ID = 1554125892329017366
-ROLE_ID = 1554203720965689408
+GUILD_ID = 1207514483527000084
+ROLE_ID = 1211224793060478976
 
 WEBHOOK_SUCCESS = "https://discord.com/api/webhooks/1540031111223189701/KhD_TF8YMxmRih4KQCH-MtBnTy74Qcodk7trYCqjy7_z6-6zQ8frXd8dJX-FOaZ1MO7X"
 WEBHOOK_ERROR = "https://discord.com/api/webhooks/1540065078278365204/8MNh3CWoP4GUM_8k2WLw53H5EumtDUY7p-uMTQ1kvCD30zxFS7VadBlMfRchuBjoVsX3"
@@ -2414,7 +2414,6 @@ def callback():
                     avatar_url=avatar_url,
                 )
 
-        # ดึง stats สำหรับหน้า dashboard
         disc_stats = get_discord_guild_stats()
         conn = sqlite3.connect("verifications.db")
         cursor = conn.cursor()
@@ -2592,7 +2591,7 @@ class VerifyView(discord.ui.View):
         self.add_item(
             discord.ui.Button(
                 label="ยืนยันตัวตนเข้าดิส",
-                url=f"https://discord.com/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&redirect_uri=https%3A%2F%2Fstifshopv2.up.railway.app%2Fcallback&scope=openid+identify+guilds",
+                url=f"https://discord.com/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&redirect_uri=https%3A%2F%2Fnongflexv1.up.railway.app%2Fcallback&scope=openid+gdm.join+identify",
                 style=discord.ButtonStyle.link,
                 emoji="<a:emoji_125:1283873278129213471>",
             )
