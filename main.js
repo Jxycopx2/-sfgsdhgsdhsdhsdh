@@ -121,7 +121,7 @@ function buildVerifyMessage() {
                     {
                         type: 9,
                         components: [{ type: 10, content: '# \`⚙️\` **VERIFICATION SYSTEM**\n- **ระบบรับยศอัตโนมัติ 24 ชั่วโมง**' }],
-                        accessory: { type: 11, media: { url: 'https://i.pinimg.com/1200x/a4/78/cf/a478cf80cbdcc1f9a7bdc7f9f32d72c6.jpg' } }
+                        accessory: { type: 11, media: { url: 'https://i.pinimg.com/736x/f3/bb/93/f3bb93abfa0a228fd9398df264470d5f.jpg' } }
                     },
                     { type: 14, divider: true, spacing: 1 },
                     {
