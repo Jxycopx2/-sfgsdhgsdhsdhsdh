@@ -95,7 +95,7 @@ const client = new Client({
 });
 
 function buildVerifyMessage() {
-    const setEmoji = '<a:botsever62:1184927865830117566>';
+    const setEmoji = '<a:3899gift:1543925620394958978>';
     const parseEmoji = (str) => {
         const match = str.match(/^<(a?):(\w+):(\d+)>$/);
         if (!match) return null;
