@@ -692,7 +692,7 @@ function renderVerify({ errorSafe, buttonUrl }) {
     </div>
     <div>
       <div class="brand-title">ระบบยืนยันตัวตน by.น้องเจคอปเด็กชายบริสุทธิ์</div>
-      <div class="brand-sub">v1.0 · MONOCHROME EDITION</div>
+      <div class="brand-sub">v1.0</div>
     </div>
   </div>
 </div>
