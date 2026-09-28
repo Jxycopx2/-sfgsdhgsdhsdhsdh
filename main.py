@@ -2694,12 +2694,9 @@ async def setup(interaction: discord.Interaction):
         title="`⚙️` **VERIFICATION SYSTEM**",
         description=f"-  **ระบบรับยศอัตโนมัติ24ชั่วโมง**\n\n"
                     f"-  **ยศที่จะได้รับ** **<@&{ROLE_ID}>**",
-        color=discord.Color(0x0000000)
+        color=discord.Color(0x000000)
     )
-    embed.set_footer(
-        text="VERIFICATION SYSTEM • by.น้องเจอคอปเด็กชายบริสุทธิ์",
-        icon_url='https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp'
-    )
+    embed.set_footer(text="VERIFICATION SYSTEM • by.น้องเจอคอปเด็กชายบริสุทธิ์")
     embed.set_image(url="https://media.discordapp.net/attachments/1554209826471415871/1554212499694288947/e380ca8bc4596b18d991b97d9e48c123.jpg?ex=6abc10af&is=6ababf2f&hm=b32472ab3ddfc8c80c62cd63728da89bf93a9f3a0e22a798af8bf924b28634c4&=&format=webp")
     await interaction.response.send_message("✅ สร้างปุ่มยืนยันตัวตนสำเร็จ!", ephemeral=True)
     await interaction.channel.send(embed=embed, view=VerifyView())
