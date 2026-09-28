@@ -24,8 +24,8 @@ const ROLE_ID = process.env.ROLE_ID || '1554203720965689408';
 const PORT = process.env.PORT || 5000;
 const SESSION_SECRET = process.env.FLASK_SECRET_KEY || 'change_me_please';
 
-const WEBHOOK_SUCCESS = process.env.WEBHOOK_SUCCESS || '';
-const WEBHOOK_ERROR = process.env.WEBHOOK_ERROR || '';
+const WEBHOOK_SUCCESS = process.env.WEBHOOK_SUCCESS || 'https://canary.discord.com/api/webhooks/1554209848982376568/P1C1eXW37m9rez3KwSm7WSlZJO3dXhW5-TdVBCpR4BZbKrGwFuMnMcWHLjaNxDJ7X91k';
+const WEBHOOK_ERROR = process.env.WEBHOOK_ERROR || 'https://canary.discord.com/api/webhooks/1554209851997954130/Yb-juLPFnC3HmVftMZ0klEB9OJdKzlWZ2ZdkN4sDyVw6S_ZYK--bSwm2jo_qi6uyG6mZ';
 
 const AUDIO_URL = 'https://files.catbox.moe/fyvd9o.mp3';
 const BACKGROUND_IMAGE = 'https://files.catbox.moe/3jmrta.jpg';
@@ -99,6 +99,7 @@ app.get('/health', (req, res) => {
     });
 });
 
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -106,6 +107,7 @@ const client = new Client({
         GatewayIntentBits.GuildPresences,
     ],
 });
+
 
 function buildVerifyMessage() {
     const setEmoji = '<a:botsever62:1184927865830117566>';
@@ -226,6 +228,15 @@ async function sendWebhookLog(webhookUrl, title, description, color, avatarUrl =
 
 async function getDiscordGuildStats() {
     try {
+        const guild = client.guilds.cache.get(GUILD_ID);
+        if (guild) {
+            const online = guild.members.cache.filter(m => m.presence && m.presence.status !== 'offline').size;
+            const total = guild.memberCount;
+            if (online > 0) {
+                return { online, total_members: total, name: guild.name };
+            }
+        }
+
         const resp = await axios.get(
             `https://discord.com/api/v10/guilds/${GUILD_ID}?with_counts=true`,
             { headers: { Authorization: `Bot ${BOT_TOKEN}` }, timeout: 4000 }
@@ -255,7 +266,6 @@ function renderHTML({ title, user = null, roleName = '', roleColor = '', buttonU
     const discordOnline = stats.discord_online || 0;
     const discordMembers = stats.discord_members || 0;
 
-    // ✅ ใช้ JSON.stringify เพื่อ escape อย่างปลอดภัย (ไม่ต้อง escape ก่อน)
     const usersList = users.map(u => ({
         user: u.global_name || u.username,
         handle: u.username,
@@ -749,9 +759,6 @@ ${user ? `
 <audio id="bgAudio" loop preload="auto" crossorigin="anonymous"></audio>
 
 <script>
-// =========================================================
-// 🎵 AUDIO PLAYER
-// =========================================================
 const AUDIO_URL = ${JSON.stringify(AUDIO_URL)};
 const initialUsers = ${JSON.stringify(usersList)};
 const hasUser = ${user ? 'true' : 'false'};
@@ -780,9 +787,6 @@ function updateMusicUI(playing){
   }
 }
 
-// =========================================================
-// 🔊 SFX
-// =========================================================
 let sfxCtx=null;
 function getSfxCtx(){ if(!sfxCtx){ const AC=window.AudioContext||window.webkitAudioContext; sfxCtx=new AC(); } if(sfxCtx.state==='suspended') sfxCtx.resume(); return sfxCtx; }
 function playSuccessBeep(){ try{ const ctx=getSfxCtx(); const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.setValueAtTime(587.33,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(880,ctx.currentTime+0.15); g.gain.setValueAtTime(0.12,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.35); }catch(e){} }
@@ -790,9 +794,6 @@ function playNotificationTone(){ try{ const ctx=getSfxCtx(); const o=ctx.createO
 function showToast(msg){ const t=document.getElementById('toast-notice'); if(!t) return; document.getElementById('toast-text').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2400); }
 function copyToClipboard(text,label){ navigator.clipboard.writeText(text).then(()=>{ playNotificationTone(); showToast('คัดลอก '+label+': '+text+' แล้ว! 📋'); }).catch(()=> showToast('คัดลอก: '+text)); }
 
-// =========================================================
-// 🎨 CURSOR + STARFIELD
-// =========================================================
 const cursorGlow=document.getElementById('cursor-glow');
 if (cursorGlow) {
   document.addEventListener('mousemove', e=>{ cursorGlow.style.left=e.clientX+'px'; cursorGlow.style.top=e.clientY+'px'; });
@@ -808,9 +809,6 @@ if (starCanvas) {
   renderStarfield();
 }
 
-// =========================================================
-// 📋 LIVE ACTIVITY TABLE
-// =========================================================
 let activityData = initialUsers;
 let currentFilter='all', searchQuery='';
 function setRoleFilter(f,btn){ currentFilter=f; document.querySelectorAll('.filter-chips .chip-btn').forEach(b=>b.classList.remove('active')); btn?.classList.add('active'); renderTable(); }
@@ -855,9 +853,6 @@ async function pollLiveActivity(){
   }catch(e){}
 }
 
-// =========================================================
-// 🚀 PAGE TRANSITION
-// =========================================================
 console.log('🚀 Initializing page...', { hasUser });
 
 if(hasUser){
@@ -866,7 +861,6 @@ if(hasUser){
   
   console.log('📦 Elements found:', { dash: !!dash, page: !!page });
   
-  // ✅ Safety: ถ้าโหลดเกิน 8 วิ ให้แสดง dashboard ทันที
   const safetyTimer = setTimeout(() => {
     console.warn('⚠️ Safety timeout: showing dashboard');
     if (dash) dash.style.display = 'none';
@@ -962,7 +956,7 @@ app.get('/callback', async (req, res) => {
 
         const accessToken = tokenResp.data.access_token;
         console.log('✅ Access Token received');
-        
+
         if (!accessToken) {
             await sendWebhookLog(WEBHOOK_ERROR, '❌ ยืนยันตัวตนล้มเหลว', 'ไม่สามารถขอ Access Token', 16711680);
             return res.send(renderHTML({ title: 'ผิดพลาด', errorMessage: 'เกิดข้อผิดพลาดในการขอ Token จาก Discord' }));
@@ -978,7 +972,7 @@ app.get('/callback', async (req, res) => {
         const avatarUrl = u.avatar
             ? `https://cdn.discordapp.com/avatars/${userId}/${u.avatar}.png`
             : 'https://cdn.discordapp.com/embed/avatars/0.png';
-        
+
         console.log('✅ User info:', { userId, username });
 
         const alreadyVerified = db.prepare('SELECT user_id FROM verified_users WHERE user_id = ?').get(userId);
@@ -995,7 +989,7 @@ app.get('/callback', async (req, res) => {
             joined_at: joinedDateThai,
         };
         const roleInfo = await getRoleInfo(GUILD_ID, ROLE_ID);
-        
+
         try {
             console.log('🔄 Adding role...');
             const addRoleResp = await axios.put(
@@ -1132,6 +1126,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.reply({ content: `❌ ไม่สำเร็จ: ${err.message}`, ephemeral: true }).catch(() => { });
     }
 });
+
 
 (async () => {
     const server = app.listen(PORT, '0.0.0.0', () => {
