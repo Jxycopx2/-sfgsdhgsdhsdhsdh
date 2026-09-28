@@ -181,10 +181,6 @@ function buildVerifyMessage() {
                         ]
                     }
                 ]
-            },
-            {
-                type: 10,
-                content: '*VERIFICATION SYSTEM • by.น้องเจคอปเด็กชายบริสุทธิ์*'
             }
         ]
     };
