@@ -1,0 +1,20 @@
+{
+  "name": "verify-all-in-one",
+  "version": "1.0.0",
+  "description": "Discord Verification System - All in One",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "better-sqlite3": "^11.5.0",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
