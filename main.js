@@ -1130,7 +1130,7 @@ client.once(Events.ClientReady, async (c) => {
     console.log(`✅ Bot online: ${c.user.tag}`);
     // ✅ แก้จุดที่ 3: เอาเม็ดม่วงออก (Streaming → Watching) + เปลี่ยน status เป็น online
     c.user.setPresence({
-        activities: [{ name: 'ระบบรับยศออโต้ 24 ชม.', type: ActivityType.Watching }],
+        activities: [{ name: 'Vendetta Shop', type: ActivityType.Watching }],
         status: 'online',
     });
 
