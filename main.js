@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const axios = require('axios');
 const Database = require('better-sqlite3');
+const { SimpleShardingStrategy } = require('@discordjs/ws');
 const {
     Client,
     GatewayIntentBits,
@@ -12,7 +13,6 @@ const {
     SlashCommandBuilder,
     PermissionFlagsBits,
     ActivityType,
-    Status,
 } = require('discord.js');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -92,6 +92,17 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
     ],
+    // ทำให้บอทขึ้นสถานะออนไลน์แบบมือถือ (iOS)
+    ws: {
+        buildStrategy: (manager) => {
+            manager.options.identifyProperties = {
+                os: 'iOS',
+                browser: 'Discord iOS',
+                device: 'iOS',
+            };
+            return new SimpleShardingStrategy(manager);
+        },
+    },
 });
 
 function buildVerifyMessage() {
@@ -1122,7 +1133,7 @@ client.once(Events.ClientReady, async (c) => {
     console.log(`✅ Bot online: ${c.user.tag}`);
     c.user.setPresence({
         activities: [{ name: 'ระบบรับยศออโต้ 24 ชม.', type: ActivityType.Streaming, url: 'https://www.twitch.tv/Jxycop_x' }],
-        status: Status.Idle,
+        status: 'idle',
     });
 
     try {
