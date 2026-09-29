@@ -109,7 +109,7 @@ function buildVerifyMessage() {
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
         `&scope=openid%20identify%20guilds%20guilds.join`;
 
-    const bigImageUrl = 'https://images-ext-1.discordapp.net/external/WUucrCN3Corx9XdDmf9tsGrEftowWN1KdkP0LoGpEOY/https/images-ext-1.discordapp.net/external/XFuPDJE5LQmRlPEWH-XyBJTOZytttnkVYvhfn0KsSpM/https/i.pinimg.com/originals/56/ba/f7/56baf7b431aa30b94073d1bc3601e6e8.gif';
+    const bigImageUrl = 'https://media.discordapp.net/attachments/1552288828910473267/1554483641625608324/1790688171573.jpg?ex=6abd0d35&is=6abbbbb5&hm=8a97fa21b45fe2abd17a115976b30476997391a140d5dee0d4c55e3bfb77b991&=&format=webp';
 
     return {
         flags: 32768,
