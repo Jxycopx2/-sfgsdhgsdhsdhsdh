@@ -3,7 +3,6 @@ const express = require('express');
 const session = require('express-session');
 const axios = require('axios');
 const Database = require('better-sqlite3');
-const { SimpleShardingStrategy } = require('@discordjs/ws');
 const {
     Client,
     GatewayIntentBits,
@@ -86,6 +85,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', uptime: process.uptime() });
 });
 
+// ✅ แก้จุดที่ 2: ใช้ ws.properties แทน ws.buildStrategy
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -94,13 +94,10 @@ const client = new Client({
     ],
     // ทำให้บอทขึ้นสถานะออนไลน์แบบมือถือ (iOS)
     ws: {
-        buildStrategy: (manager) => {
-            manager.options.identifyProperties = {
-                os: 'iOS',
-                browser: 'Discord iOS',
-                device: 'iOS',
-            };
-            return new SimpleShardingStrategy(manager);
+        properties: {
+            os: 'iOS',
+            browser: 'Discord iOS',
+            device: 'iOS',
         },
     },
 });
@@ -1131,9 +1128,10 @@ app.get('/api/live_activity', async (req, res) => {
 
 client.once(Events.ClientReady, async (c) => {
     console.log(`✅ Bot online: ${c.user.tag}`);
+    // ✅ แก้จุดที่ 3: เอาเม็ดม่วงออก (Streaming → Watching) + เปลี่ยน status เป็น online
     c.user.setPresence({
-        activities: [{ name: 'ระบบรับยศออโต้ 24 ชม.', type: ActivityType.Streaming, url: 'https://www.twitch.tv/Jxycop_x' }],
-        status: 'idle',
+        activities: [{ name: 'ระบบรับยศออโต้ 24 ชม.', type: ActivityType.Watching }],
+        status: 'online',
     });
 
     try {
